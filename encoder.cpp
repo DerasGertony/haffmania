@@ -81,6 +81,136 @@ void treefication(vector<Node*>&tree){ // по сути из массива од
 }
 
 
+void addCode(Node*&root){ // спускаясь по нодам дает им код где кодес это чек чтоб когда дал последний код не ушел в цикл
+    if(root->numnode==1){
+        return;
+    }
+
+    memcpy(root->right->code,root->code, sizeof(root->code));
+    root->right->codelen = root->codelen;
+    root->right->code[root->right->codelen] = 1;
+    root->right->codelen++;
+    addCode(root->right);
+
+    memcpy(root->left->code, root->code, sizeof(root->code));
+    root->left->codelen = root->codelen;
+    root->left->code[root->left->codelen] = 0;
+    root->left->codelen++;
+    addCode(root->left);
+
+}
+
+void clean(char*& a){ // убирает мусор из строк мапы
+    int i = 0;
+    while(a[i]=='0' || a[i]=='1'){i+=1;}
+    a[i]=0;
+}
+
+
+string decToBinary(int n) // возвращает строку двоичного представления
+{
+    int binaryNum[8] = {0};
+    string buf;
+
+    int i = 0;
+    while (n > 0) {
+
+        binaryNum[i] = n % 2;
+        n = n / 2;
+        i++;
+    }
+
+    for (int j = 15; j >= 0; j--)
+        buf+= to_string(binaryNum[j]);
+
+    return buf;
+}
+
+vector<bool> stringToBits(const string& str) { // переводит символы в биты логично
+    vector<bool> bits;
+    for (char c : str) {
+        if (c == '0') {
+            bits.push_back(false);
+        } else if (c == '1') {
+            bits.push_back(true);
+        }
+    }
+    return bits;
+}
+
+
+string filetobytes(vector<Node*>&tree, string& from){ // по сути внутренний мэйн но не совсем
+    FILE * fr = fopen(from.c_str(), "rb");
+    string res;
+    map<char, char*> a;
+    cout<<"\ncoding1";
+    for(auto & i : tree){ // собирает мапу где ключ символ дата-> код
+        if(i->simb.first == 0) {
+            char* buf = (char*)malloc(i->codelen * sizeof(char));
+            for (int j = 0; j < i->codelen; j++){
+                if(i->code[j]){
+                    buf[j] = '1';}
+                else{
+                    buf[j] = '0';
+                }
+            }
+            a[i->simb.second] = (char*)malloc(i->codelen * sizeof(char));
+            clean(buf);
+            strcpy(a[i->simb.second], buf);
+
+
+        }
+
+    }
+    cout<<"\ncoding2";
+    fseek(fr, 0L, SEEK_END);
+    long length = ftell(fr);
+    fseek(fr, 0, SEEK_SET);
+    for (int i = 0; i < length; ++i)// заменяет символы на их коды
+    {
+        char k = fgetc(fr);
+
+        res+=a[k];
+
+    }
+
+    fclose(fr);
+
+    FILE* out = fopen("output.txt", "w");
+
+    string reswalph;
+    char lenalph = 0;
+    for(int i = 0; i < tree.size(); i++){
+        if(tree[i]->simb.first == 0) {
+            lenalph+=1;
+        }
+    }
+    reswalph = decToBinary(lenalph - 1); // чтоб 512 тоже влезло
+
+
+    for(int i = 0; i < tree.size(); i++){ // добавляем в начало длину алфавита и сам алфавит в виде (символ, длина его кода в битах, код)
+        if(tree[i]->simb.first == 0) {
+            reswalph+=decToBinary(tree[i]->simb.second);
+            reswalph+=decToBinary(tree[i]->codelen);
+            reswalph+= a[tree[i]->simb.second];
+        }
+    }
+    reswalph+=res;
+
+
+
+    vector<bool> end = stringToBits(reswalph);
+    cout<< end.size() << ' ' << reswalph.size();
+    for(int i = 0; i < end.size(); i+=8){// биты собираем в байты и записываем
+        fputc(end[i] * 128 + end[i+1] * 64 +end[i+2] * 32 +end[i+3] * 16 +end[i+4] * 8 +end[i+5] * 4 +end[i+6] * 2 +end[i+7] * 1, out);
+    }
+    fclose(out);
+    return "";
+
+}
+
+
+
 
 
 

@@ -18,10 +18,28 @@ int main() {
     read(filename, freq);
     vector<Node*> tree = frtoNo(freq);
     treefication(tree);
+    addCode(tree.back());
+    for (int i = tree.size() - 1; i >= 0; i--) {
+        cout << tree[i]->freq << ' ';
+
+    }
+
+
+    for (int i = tree.size() - 1; i >= 0; i--) {
+        if (tree[i]->codelen == 0) {
+            cout << (char) tree[i]->simb.second << " aaaaaaaaa" << i;
+            cout << endl;
+        }
+
+    }
+    cout << "ready";
+
+    string r = filetobytes(tree, filename);
 
 
 
-    cout<<"ready";
+
+    cout<<"done";
 
 
     return 0;
