@@ -120,7 +120,7 @@ string decToBinary(int n) // возвращает строку двоичног�
         i++;
     }
 
-    for (int j = 15; j >= 0; j--)
+    for (int j = 7; j >= 0; j--)
         buf+= to_string(binaryNum[j]);
 
     return buf;
@@ -201,6 +201,11 @@ string filetobytes(vector<Node*>&tree, string& from){ // по сути внут�
 
     vector<bool> end = stringToBits(reswalph);
     cout<< end.size() << ' ' << reswalph.size();
+    int tail = (8-end.size()%8)%8;  // без этого нельзя будет почарно(ну то есть никак) записать/считать
+    fputc(tail,out);
+    for(int i = 0; i<tail; i++){
+        end.push_back(false);
+    }
     for(int i = 0; i < end.size(); i+=8){// биты собираем в байты и записываем
         fputc(end[i] * 128 + end[i+1] * 64 +end[i+2] * 32 +end[i+3] * 16 +end[i+4] * 8 +end[i+5] * 4 +end[i+6] * 2 +end[i+7] * 1, out);
     }
