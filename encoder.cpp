@@ -185,7 +185,7 @@ string filetobytes(vector<Node*>&tree, string& from){ // по сути внут�
             lenalph+=1;
         }
     }
-    reswalph = decToBinary(lenalph - 1); // чтоб 512 тоже влезло
+    reswalph = decToBinary(lenalph); // чтоб 512 тоже влезло
 
 
     for(int i = 0; i < tree.size(); i++){ // добавляем в начало длину алфавита и сам алфавит в виде (символ, длина его кода в битах, код)
@@ -213,10 +213,6 @@ string filetobytes(vector<Node*>&tree, string& from){ // по сути внут�
     return "";
 
 }
-
-
-
-
 
 
 
