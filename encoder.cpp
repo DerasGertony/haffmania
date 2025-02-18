@@ -213,3 +213,6 @@ string filetobytes(vector<Node*>&tree, string& from){ // по сути внут�
     return "";
 
 }
+
+
+

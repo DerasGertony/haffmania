@@ -41,6 +41,13 @@ int main() {
 
     string r = filetobytes(tree, filename);
 
+
+
+    string r = filetobytes(tree, filename);
+
+    cout<<"done";
+
+
     cout<<"кодирование успешно завершено. Начинаем декодирование." << endl;
 
     

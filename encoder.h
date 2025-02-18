@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <iostream>
 #include <fstream>
@@ -33,3 +34,4 @@ string filetobytes(vector<Node*>&tree, string& from);
 string decToBinary(int n);
 
 #endif //UNTITLED8_ENCODER_H
+
