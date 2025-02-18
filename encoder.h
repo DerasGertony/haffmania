@@ -28,6 +28,8 @@ vector<Node*> frtoNo(vector<pair<int,char>>& freq);
 vector<bool> stringToBits(const string& str);
 void read(string& from, vector<pair<int,char>>& freq);
 void treefication(vector<Node*>&tree);
-
+void addCode(Node*&root);
+string filetobytes(vector<Node*>&tree, string& from);
+string decToBinary(int n);
 
 #endif //UNTITLED8_ENCODER_H
