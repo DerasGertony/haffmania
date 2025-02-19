@@ -39,7 +39,7 @@ string decodeMessage(const string& str) {
             cerr << "Ошибка, некорректные данные для символов алфавита." << endl;
             return "";
         }
-        
+        cout<<'1234';
         char symbol = static_cast<char>(binToInt(str.substr(index, 8)));
         index += 8;
         int codeLength = binToInt(str.substr(index, 8));
@@ -86,8 +86,10 @@ string readBinaryFromFile(const string& filename) {
 
     string binaryString = "";
     unsigned char byte;
+    int i = 0;
     while (inFile.read(reinterpret_cast<char*>(&byte), 1)) {
         binaryString += bitset<8>(byte).to_string();
+        cout<< binaryString<<endl;
     }
 
     inFile.close();
