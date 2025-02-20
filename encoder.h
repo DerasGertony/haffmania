@@ -17,8 +17,8 @@ class Node {
 public:
     Node* left;
     Node* right;
+    Node* par;
     std::pair<char, int> simb;
-    short* code;
     int codelen;
     int freq;
     int numnode;
@@ -29,7 +29,7 @@ vector<Node*> frtoNo(vector<pair<int,char>>& freq);
 vector<bool> stringToBits(const string& str);
 void read(string& from, vector<pair<int,char>>& freq);
 void treefication(vector<Node*>&tree);
-void addCode(Node*&root);
+void addCode(vector<Node*>&tree);
 string filetobytes(vector<Node*>&tree, string& from);
 string decToBinary(int n);
 

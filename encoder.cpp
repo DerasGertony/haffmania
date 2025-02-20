@@ -9,7 +9,6 @@ using namespace std;
 Node* uniteNodes(Node* lchild, Node* rchild) // по сути из массива создает дерево
 {
     Node * res = new Node;
-    res->code = (short*)malloc(1024* sizeof(short));
     res->codelen = 0;
     res->freq = lchild->freq + rchild->freq;
     res->simb.first = 1;
@@ -46,13 +45,13 @@ void read(string& from, vector<pair<int,char>>& freq){ // создает мас�
 
 vector<Node*> frtoNo(vector<pair<int,char>>& freq){ // из пар делает ноды для создания дерева
     static vector<Node*> tree;
+
     for(int i = 0; i < freq.size(); i++){
         if(freq[i].first) {
             Node* k = new Node;
-            k->code = (short*)malloc(1024* sizeof(short));
             k->codelen = 0;
-            k->right = new Node;
-            k->left = new Node;
+            k->right = nullptr;
+            k->left = nullptr;
             k->freq = freq[i].first;
             k->simb.first = 0;
             k->simb.second = freq[i].second;
@@ -60,8 +59,12 @@ vector<Node*> frtoNo(vector<pair<int,char>>& freq){ // из пар делает 
             tree.push_back(k);
         }
     }
-    cout<<"\ncodingtree";
+    cout<<"\ncodingtree"<<endl;
     stable_sort(tree.begin(), tree.end(), compn);
+    for (int i = tree.size() - 1; i >= 0; i--) {
+        cout << (char)tree[i]->simb.second << tree[i]->freq << endl;
+
+    }
     return tree;
 }
 
@@ -81,30 +84,21 @@ void treefication(vector<Node*>&tree){ // по сути из массива од
 }
 
 
-void addCode(Node*&root){ // спускаясь по нодам дает им код где кодес это чек чтоб когда дал последний код не ушел в цикл
-    if(root->numnode==1){
-        return;
+// спускаясь по нодам дает им код где кодес это чек чтоб когда дал последний код не ушел в цикл
+void addCode(Node* root, string str,map<char, string> &a)
+    {
+        if (root == nullptr)
+            return;
+
+        // found a leaf node
+        if (!root->left && !root->right) {
+            a[root->simb.second] = str;
+        }
+        addCode(root->left, str + "0", a);
+        addCode(root->right, str + "1", a);
     }
 
-    memcpy(root->right->code,root->code, sizeof(root->code));
-    root->right->codelen = root->codelen;
-    root->right->code[root->right->codelen] = 1;
-    root->right->codelen++;
-    addCode(root->right);
 
-    memcpy(root->left->code, root->code, sizeof(root->code));
-    root->left->codelen = root->codelen;
-    root->left->code[root->left->codelen] = 0;
-    root->left->codelen++;
-    addCode(root->left);
-
-}
-
-void clean(char*& a){ // убирает мусор из строк мапы
-    int i = 0;
-    while(a[i]=='0' || a[i]=='1'){i+=1;}
-    a[i]=0;
-}
 
 
 string decToBinary(int n) // возвращает строку двоичного представления
@@ -142,25 +136,11 @@ vector<bool> stringToBits(const string& str) { // переводит симво�
 string filetobytes(vector<Node*>&tree, string& from){ // по сути внутренний мэйн но не совсем
     FILE * fr = fopen(from.c_str(), "rb");
     string res;
-    map<char, char*> a;
+    map<char, string> a;
+    addCode(tree[tree.size()-1], "", a);
     cout<<"\ncoding1";
-    for(auto & i : tree){ // собирает мапу где ключ символ дата-> код
-        if(i->simb.first == 0) {
-            char* buf = (char*)malloc(i->codelen * sizeof(char));
-            for (int j = 0; j < i->codelen; j++){
-                if(i->code[j]){
-                    buf[j] = '1';}
-                else{
-                    buf[j] = '0';
-                }
-            }
-            a[i->simb.second] = (char*)malloc(i->codelen * sizeof(char));
-            clean(buf);
-            strcpy(a[i->simb.second], buf);
-
-
-        }
-
+    for(auto r:a){
+        cout<<r.first<<r.second << a.size()<<endl;
     }
     cout<<"\ncoding2";
     fseek(fr, 0L, SEEK_END);
@@ -169,47 +149,51 @@ string filetobytes(vector<Node*>&tree, string& from){ // по сути внут�
     for (int i = 0; i < length; ++i)// заменяет символы на их коды
     {
         char k = fgetc(fr);
-
         res+=a[k];
-
     }
 
     fclose(fr);
 
     FILE* out = fopen("output.txt", "w");
+    FILE* ot = fopen("D.txt", "w");
 
-    string reswalph;
-    char lenalph = 0;
-    for(int i = 0; i < tree.size(); i++){
-        if(tree[i]->simb.first == 0) {
-            lenalph+=1;
-        }
-    }
-    reswalph = decToBinary(lenalph); // чтоб 512 тоже влезло
 
+    char lenalph = a.size();;
+    fputs(to_string(lenalph).c_str(),out); // чтоб 256 тоже влезло
+    fputc('\n', out);
 
     for(int i = 0; i < tree.size(); i++){ // добавляем в начало длину алфавита и сам алфавит в виде (символ, длина его кода в битах, код)
-        if(tree[i]->simb.first == 0) {
-            reswalph+=decToBinary(tree[i]->simb.second);
-            reswalph+=decToBinary(tree[i]->codelen);
-            reswalph+= a[tree[i]->simb.second];
+        if(tree[i]->simb.first == 0){
+            fputc(tree[i]->simb.second, out);
+            fputs(a[tree[i]->simb.second].c_str(), out);
+            fputc('\n', out);
         }
     }
-    reswalph+=res;
+
+    cout<<endl;
 
 
+    vector<bool> end = stringToBits(res);
 
-    vector<bool> end = stringToBits(reswalph);
-    cout<< end.size() << ' ' << reswalph.size();
+    cout<< end.size() ;
     int tail = (8-end.size()%8)%8;  // без этого нельзя будет почарно(ну то есть никак) записать/считать
     fputc(tail,out);
+    fputc('\n',out);
+    cout<<tail;
+    fputc(tail, ot);
+    for(bool i:end){
+        fputc(i+'0',ot);
+    }
+    fclose(ot);
     for(int i = 0; i<tail; i++){
         end.push_back(false);
     }
+
     for(int i = 0; i < end.size(); i+=8){// биты собираем в байты и записываем
         fputc(end[i] * 128 + end[i+1] * 64 +end[i+2] * 32 +end[i+3] * 16 +end[i+4] * 8 +end[i+5] * 4 +end[i+6] * 2 +end[i+7] * 1, out);
     }
     fclose(out);
+    fclose(ot);
     return "";
 
 }

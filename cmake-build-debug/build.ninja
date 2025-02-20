@@ -67,6 +67,18 @@ build CMakeFiles/haffman.dir/decode.cpp.obj: CXX_COMPILER__haffman_Debug C$:/Use
   OBJECT_DIR = CMakeFiles\haffman.dir
   OBJECT_FILE_DIR = CMakeFiles\haffman.dir
 
+build CMakeFiles/haffman.dir/fastdec.cpp.obj: CXX_COMPILER__haffman_Debug C$:/Users/Admin/CLionProjects/haffman/fastdec.cpp || cmake_object_order_depends_target_haffman
+  DEP_FILE = CMakeFiles\haffman.dir\fastdec.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\haffman.dir
+  OBJECT_FILE_DIR = CMakeFiles\haffman.dir
+
+build CMakeFiles/haffman.dir/Decoder.cpp.obj: CXX_COMPILER__haffman_Debug C$:/Users/Admin/CLionProjects/haffman/Decoder.cpp || cmake_object_order_depends_target_haffman
+  DEP_FILE = CMakeFiles\haffman.dir\Decoder.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\haffman.dir
+  OBJECT_FILE_DIR = CMakeFiles\haffman.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target haffman
@@ -75,7 +87,7 @@ build CMakeFiles/haffman.dir/decode.cpp.obj: CXX_COMPILER__haffman_Debug C$:/Use
 #############################################
 # Link the executable haffman.exe
 
-build haffman.exe: CXX_EXECUTABLE_LINKER__haffman_Debug CMakeFiles/haffman.dir/main.cpp.obj CMakeFiles/haffman.dir/encoder.cpp.obj CMakeFiles/haffman.dir/decode.cpp.obj
+build haffman.exe: CXX_EXECUTABLE_LINKER__haffman_Debug CMakeFiles/haffman.dir/main.cpp.obj CMakeFiles/haffman.dir/encoder.cpp.obj CMakeFiles/haffman.dir/decode.cpp.obj CMakeFiles/haffman.dir/fastdec.cpp.obj CMakeFiles/haffman.dir/Decoder.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\haffman.dir
